@@ -13,7 +13,7 @@
 // var is global scoped and let and const are block scoped, so whenever we want to use a variable in a scope which does no affect the value of same named variable out side the scope we should use let and const
 
 var a = 100;
-const b = 100;
+let b = 100;
 const c = 100;
 
 {
