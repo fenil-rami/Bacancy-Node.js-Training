@@ -29,7 +29,6 @@ myBtn.addEventListener('click', function () {
       dataContainer.appendChild(document.createElement('br'));
       myContainer.appendChild(dataContainer);
       dataAlreadyFetched = true;
-      console.log(JSON.stringify(json));
     })
     .catch((err) => console.log(err));
 });
