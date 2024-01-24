@@ -2,30 +2,33 @@
     "name": "bacancy-nodejs-training",
     "version": "1.0.0",
     "scripts": {
-      "lint": "eslint --ignore-path .gitignore . --fix"
+        "lint": "eslint --ignore-path .gitignore . --fix"
     },
     "keywords": [
-      "Node.js",
-      "Mongoose",
-      "MongoDB",
-      "NoSQL",
-      "Express",
-      "SocketIO",
-      "Socket-Clustering",
-      "ES-Lint",
-      "Authentication",
-      "Authorization",
-      "JavaScript"
+        "Node.js",
+        "Mongoose",
+        "MongoDB",
+        "NoSQL",
+        "Express",
+        "SocketIO",
+        "Socket-Clustering",
+        "ES-Lint",
+        "Authentication",
+        "Authorization",
+        "JavaScript"
     ],
     "author": "Franklin P. Thaker",
     "license": "ISC",
     "devDependencies": {
-      "eslint": "^7.26.0",
-      "eslint-config-airbnb": "^18.2.1",
-      "eslint-plugin-import": "^2.26.0",
-      "eslint-plugin-jsx-a11y": "^6.4.1",
-      "eslint-plugin-react": "^7.23.2",
-      "eslint-plugin-react-hooks": "^4.2.0",
-      "eslint-plugin-yaml": "^0.4.2"
+        "eslint": "^7.26.0",
+        "eslint-config-airbnb": "^18.2.1",
+        "eslint-plugin-import": "^2.26.0",
+        "eslint-plugin-jsx-a11y": "^6.4.1",
+        "eslint-plugin-react": "^7.23.2",
+        "eslint-plugin-react-hooks": "^4.2.0",
+        "eslint-plugin-yaml": "^0.4.2"
+    },
+    "dependencies": {
+        "moment": "^2.30.1"
     }
-  }
+}
