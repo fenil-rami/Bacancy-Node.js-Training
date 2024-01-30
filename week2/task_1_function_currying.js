@@ -4,12 +4,18 @@ function multiply(a, b) {
   return a * b;
 }
 
+// using closure
 function curryMultiply(a) {
   return function (b) {
     return multiply(a, b);
   };
 }
 
-const multiplyBy2 = curryMultiply(2);
+const multiplyBy2Closure = curryMultiply(2);
 
-console.log(multiplyBy2(4));
+console.log(multiplyBy2Closure(4));
+
+// using bind
+const multiplyBy2Bind = multiply.bind(null, 2);
+
+console.log(multiplyBy2Bind(10));
