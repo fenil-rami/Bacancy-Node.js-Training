@@ -70,13 +70,6 @@ const verifyToken = (req, res, next) => {
 app.use(bodyParser.json());
 app.use(verifyToken);
 
-// const booksData = JSON.parse(fs.readFileSync(`${__dirname}/../week3/books.json`, 'utf-8', (err) => {
-//   if (err) {
-//     console.log('Error occurred while fetching books data from books.json! ', err);
-//     process.exit();
-//   }
-// }));
-
 app.get('/', (req, res) => {
   res.send('Welcome to the express server!');
 });
