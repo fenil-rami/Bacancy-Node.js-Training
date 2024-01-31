@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+
 // Commonly used http status codes
 const responseCode = {
   200: 200, // OK
