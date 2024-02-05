@@ -1,0 +1,53 @@
+<% idx = 1 %>
+<div style="display: flex; flex-direction: column;">
+  <div style="display: flex; flex-direction: column; height: 70%; justify-content: center; align-items: center;">
+    <h1 style="margin-bottom: 40px;">ALL &nbsp; TASKS</h1>
+    <table style="border-collapse: collapse; width:75%;">
+      <thead>
+        <tr style="border: 1px solid black;">
+          <th style="padding: 8px; border: 1px solid black;">NO</th>
+          <th style="padding: 8px; border: 1px solid black;">ID</th>
+          <th style="padding: 8px; border: 1px solid black;">TITLE</th>
+          <th style="padding: 8px; border: 1px solid black;">DESCRIPTION</th>
+          <th style="padding: 8px; border: 1px solid black;">UPDATE</th>
+          <th style="padding: 8px; border: 1px solid black;">DELETE</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for(let i=0; i<tasks.length; i++) { %>
+          <tr style="border: 1px solid black;">
+            <td style="border: 1px solid black; padding: 8px; text-align: center;">
+              <%= idx %>
+              <% idx = idx + 1 %>
+            </td>
+            <td style="border: 1px solid black; padding: 8px; text-align: center;">
+              <%= tasks[i].id %>
+            </td>
+            <td style="border: 1px solid black; padding: 8px; text-align: center;">
+              <%= tasks[i].title %>
+            </td>
+            <td style="border: 1px solid black; padding: 8px; text-align: center;">
+              <%= tasks[i].description %>
+            </td>
+            <td style="border: 1px solid black; padding: 8px; text-align: center;">
+              <button style="cursor: pointer;" onclick='location.pathname=`/update-task/<%= tasks[i].id %>`'>UPDATE</button>
+            </td>
+            <td style="border: 1px solid black; padding: 8px; text-align: center;">
+              <form method="post" action="/api/tasks/delete/<%= tasks[i].id %>">
+                <button style="cursor: pointer; margin-top: 14px;" type="submit">DELETE</button>
+              </form>
+            </td>
+          </tr>
+          <% } %>
+      </tbody>
+    </table>
+  </div>
+
+  <div style="display: flex; justify-content: center; align-items: center; margin-top: 20px;">
+    <button style="cursor: pointer; width: 200px; height: 75px;" onclick="location.pathname='/add-task'">
+      <h2>
+        ADD NEW TASK
+      </h2>
+    </button>
+  </div>
+</div>
