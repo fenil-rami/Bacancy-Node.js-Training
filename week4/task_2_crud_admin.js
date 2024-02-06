@@ -46,7 +46,8 @@ const accessRestrictedError = function (res) {
 
 // using middleware to check the admin condition for every API
 const adminMiddleware = function (req, res, next) {
-  if (req.headers.hasOwnProperty('role') && req.headers.role === 'admin') next();
+  if (req.method === 'GET') next();
+  else if (req.headers.hasOwnProperty('role') && req.headers.role === 'admin') next();
   else return accessRestrictedError(res);
 };
 
