@@ -8,8 +8,13 @@
 const bodyParser = require('body-parser');
 const express = require('express');
 const fs = require('fs');
+
+// Middlewares
 const { adminMiddleware } = require('./middlewares/task_2_admin_middleware');
 const { jwtMiddleware } = require('./middlewares/task_3_jwt_middleware');
+const { globalErrorHandler } = require('./middlewares/task_5_global_error_handler_middleware');
+
+// Router
 const { Router } = require('./routes/router');
 
 const app = express();
@@ -17,10 +22,11 @@ const PORT = 3030;
 
 app.use(bodyParser.json());
 
-// Middlewares
+// task 5 global error handler middleware
+app.use(globalErrorHandler);
 
 // task 2 admin middleware
-// app.use(adminMiddleware);
+app.use(adminMiddleware);
 
 // task 3 jwt middleware
 app.use(jwtMiddleware);
