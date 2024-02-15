@@ -33,7 +33,7 @@
               <button style="cursor: pointer;" onclick='location.pathname=`/update-task/<%= tasks[i].id %>`'>UPDATE</button>
             </td>
             <td style="border: 1px solid black; padding: 8px; text-align: center;">
-              <form method="post" action="/api/tasks/delete/<%= tasks[i].id %>">
+              <form method="post" action="/api/v1/tasks/delete/<%= tasks[i].id %>">
                 <button style="cursor: pointer; margin-top: 14px;" type="submit">DELETE</button>
               </form>
             </td>
