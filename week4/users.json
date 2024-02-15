@@ -1,12 +1,1 @@
-[
-  {
-    "name": "Fenil",
-    "email": "fenil.rami@bacancy.com",
-    "password": "fenil12345"
-  },
-  {
-    "name": "Temp Fenil",
-    "email": "feniltemp@gmail.com",
-    "password": "temp12345"
-  }
-]
+[{"name":"Fenil","email":"fenil.rami@bacancy.com","password":"fenil12345"},{"name":"Temp Fenil","email":"feniltemp@gmail.com","password":"temp12345"},{"name":"test","email":"test@bacancy.com","password":"test12345"}]
