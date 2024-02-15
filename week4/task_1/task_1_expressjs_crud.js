@@ -13,6 +13,7 @@ const fs = require('fs');
 const { adminMiddleware } = require('./middlewares/task_2_admin_middleware');
 const { jwtMiddleware } = require('./middlewares/task_3_jwt_middleware');
 const { globalErrorHandler } = require('./middlewares/task_5_global_error_handler_middleware');
+const { helmetMiddleware } = require('./middlewares/task_6_helmet_middleware');
 
 // Router
 const { Router } = require('./routes/router');
@@ -24,6 +25,9 @@ app.use(bodyParser.json());
 
 // task 5 global error handler middleware
 app.use(globalErrorHandler);
+
+// task 6 helmet middleware for secure server
+app.use(helmetMiddleware());
 
 // task 2 admin middleware
 app.use(adminMiddleware);
