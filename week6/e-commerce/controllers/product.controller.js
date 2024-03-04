@@ -3,8 +3,11 @@ import { httpStatusCodes } from '../constants/constants.js';
 import { errRes, sendResponse } from '../helpers/sendReponse.js';
 
 export const getProductsController = async (req, res, next) => {
+  const { page } = req.query;
+
   try {
-    const products = await getProducts();
+    const products = await getProducts(parseInt(page));
+    console.log(products.length);
     return sendResponse(res, httpStatusCodes.OK, 'success', 'get all products', products);
   } catch (error) {
     next(error);
@@ -59,7 +62,7 @@ export const updateProductController = async (req, res, next) => {
     }, req, res, next);
 
     // If the user(seller) tries to update a product which is not created/owned by them 
-    if(req.body.decoded._id !== product.seller._id.toString()) {
+    if (req.body.decoded._id !== product.seller._id.toString()) {
       return errRes({
         message: "Forbidden",
         status: httpStatusCodes.Forbidden
@@ -85,7 +88,7 @@ export const deleteProductContoller = async (req, res, next) => {
     }, req, res, next);
 
     // If the user(seller) tries to delete a product which is not created/owned by them 
-    if(req.body.decoded._id !== product.seller._id.toString()) {
+    if (req.body.decoded._id !== product.seller._id.toString()) {
       return errRes({
         message: "Forbidden",
         status: httpStatusCodes.Forbidden

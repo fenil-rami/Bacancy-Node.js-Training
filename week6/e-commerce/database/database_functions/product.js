@@ -1,8 +1,19 @@
 import { productModel } from "../models/product.model.js";
 
-export const getProducts = async () => new Promise(async (resolve, reject) => {
+
+export const getProducts = async (page) => new Promise(async (resolve, reject) => {
+  const pageSize = 10;
+  const skip = (page - 1) * pageSize;
+
   try {
-    const products = await productModel.find().lean().populate('seller', '-password').lean();
+    let products;
+    
+    // If pagination is not applied
+    if(!page || page===undefined) products = await productModel.find().lean().populate('seller', '-password').lean();
+
+    // pagination is applied
+    else products = await productModel.find().skip(skip).limit(pageSize).lean().populate('seller', '-password').lean();
+
     resolve(products);
   } catch (error) {
     reject(error);

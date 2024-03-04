@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const orderSchema = new mongoose.Schema({
-  items: {
+  data: {
     type : Object,
     required: [true, 'order must contain items']
   },

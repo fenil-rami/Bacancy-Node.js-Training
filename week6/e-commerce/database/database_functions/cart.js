@@ -72,7 +72,7 @@ export const placeOrder = async (buyerId) => new Promise(async (resolve, reject)
     await cartModel.deleteMany({ buyer: buyerId }).lean();
 
     // save order history 
-    const orderSummary = await orderModel.create({ items: cartItems, buyer: buyerId });
+    const orderSummary = await orderModel.create({ data: cartItems, buyer: buyerId });
 
     // commit transaction
     await session.commitTransaction();
