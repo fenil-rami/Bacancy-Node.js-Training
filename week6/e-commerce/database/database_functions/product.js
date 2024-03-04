@@ -9,9 +9,9 @@ export const getProducts = async () => new Promise(async (resolve, reject) => {
   }
 })
 
-export const getProduct = async (producId) => new Promise(async (resolve, reject) => {
+export const getProduct = async (productId) => new Promise(async (resolve, reject) => {
   try {
-    const product = await productModel.findById(producId).lean().populate('seller', '-password').lean();
+    const product = await productModel.findById(productId).lean().populate('seller', '-password').lean();
     resolve(product);
   } catch (error) {
     reject(error);

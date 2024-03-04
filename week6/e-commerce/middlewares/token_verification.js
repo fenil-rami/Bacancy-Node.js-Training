@@ -39,3 +39,35 @@ export const userTokenVerification = async (req, res, next) => {
     }, req, res, next);
   }
 }
+
+export const buyercartVerification = async (req, res, next) => {
+  let token = req.get('authorization')
+  if (token) {
+    token = token.slice(7);
+    try {
+      const data = await jwt.verify(token, process.env.JWT_SECRET);
+
+      if(data.role === 'buyer' && req.params.id === data._id) {
+        req.body.decoded = data;
+        next();
+        return;
+      }
+      
+      return errRes({
+        message: 'Forbidden',
+        status: httpStatusCodes.Forbidden
+      }, req, res, next);
+    } catch (error) {
+      return errRes({
+        message: 'Unauthorized',
+        status: httpStatusCodes.Unauthorized
+      }, req, res, next);
+    }
+  }
+  else {
+    return errRes({
+      message: 'Unauthorized',
+      status: httpStatusCodes.Unauthorized
+    }, req, res, next);
+  }
+}
