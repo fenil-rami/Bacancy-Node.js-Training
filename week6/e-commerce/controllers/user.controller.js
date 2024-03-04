@@ -74,7 +74,7 @@ export const loginUserController = async (req, res, next) => {
     if (!user || user === undefined || user.length === 0) return errRes({ status: httpStatusCodes['Not Found'], message: 'user with given username does not exists' }, req, res, next);
 
     if (compareSync(password, user[0].password)) {
-      const token = await jwt.sign({ username: user[0].username, role: user[0].role }, process.env.JWT_SECRET);
+      const token = await jwt.sign({ username: user[0].username, role: user[0].role, _id: user[0]._id.toString() }, process.env.JWT_SECRET);
       return sendResponse(res, httpStatusCodes.OK, 'success', 'login successfull', { token });
     }
 
