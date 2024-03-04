@@ -11,15 +11,20 @@ export const userTokenVerification = async (req, res, next) => {
     try {
       const data = await jwt.verify(token, process.env.JWT_SECRET);
 
-      if(req.params.id !== data._id) {
-        return errRes({
-          message: 'Unauthorized',
-          status: httpStatusCodes.Unauthorized
-        }, req, res, next);
+      // check if it's a product api, then here only check if the user is seller or not
+      let seller_verification = (req.originalUrl.includes('products') ? (data.role === 'seller') : false);
+
+      // for users api, verify the user in request with decoded user data 
+      if (seller_verification || req.params.id === data._id) {
+        req.body.decoded = data;
+        next();
+        return;
       }
-      
-      req.body.decoded = data;
-      next();
+
+      return errRes({
+        message: 'Forbidden',
+        status: httpStatusCodes.Forbidden
+      }, req, res, next);
     } catch (error) {
       return errRes({
         message: 'Unauthorized',

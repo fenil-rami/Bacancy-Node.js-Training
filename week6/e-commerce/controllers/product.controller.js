@@ -27,6 +27,14 @@ export const getProductController = async (req, res, next) => {
 
 export const createProductController = async (req, res, next) => {
   const { name, price, seller } = req.body;
+
+  if (!seller || seller !== req.body.decoded._id) {
+    return errRes({
+      message: "Forbidden",
+      status: httpStatusCodes.Forbidden
+    }, req, res, next);
+  }
+
   try {
     const product = await createProduct({ name, price, seller });
     return sendResponse(res, httpStatusCodes.Created, 'success', 'product created', product);
@@ -43,11 +51,22 @@ export const updateProductController = async (req, res, next) => {
   if (body.price) dataToUpdate.price = body.price;
 
   try {
-    const product = await updateProduct(id, dataToUpdate);
+    const product = await getProduct(id);
+
     if (!product) return errRes({
       message: 'product with given id does not exists',
       status: httpStatusCodes["Not Found"]
     }, req, res, next);
+
+    // If the user(seller) tries to update a product which is not created/owned by them 
+    if(req.body.decoded._id !== product.seller._id.toString()) {
+      return errRes({
+        message: "Forbidden",
+        status: httpStatusCodes.Forbidden
+      }, req, res, next);
+    }
+
+    await updateProduct(id, dataToUpdate);
     return sendResponse(res, httpStatusCodes.OK, 'success', 'update product', null);
   } catch (error) {
     next(error);
@@ -58,11 +77,22 @@ export const deleteProductContoller = async (req, res, next) => {
   const { id } = req.params;
 
   try {
-    const product = await deleteProduct(id);
+    const product = await getProduct(id);
+
     if (!product) return errRes({
       message: 'product with given id does not exists',
       status: httpStatusCodes["Not Found"]
     }, req, res, next);
+
+    // If the user(seller) tries to delete a product which is not created/owned by them 
+    if(req.body.decoded._id !== product.seller._id.toString()) {
+      return errRes({
+        message: "Forbidden",
+        status: httpStatusCodes.Forbidden
+      }, req, res, next);
+    }
+
+    await deleteProduct(id);
     return sendResponse(res, httpStatusCodes.OK, 'success', 'delete product', null);
   } catch (error) {
     next(error);
