@@ -11,7 +11,7 @@ export const getUsersController = async (req, res, next) => {
     const users = await getUsers();
     return sendResponse(res, httpStatusCodes.OK, 'success', 'get all users', users);
   } catch (error) {
-    next(error);
+    return errRes(new CustomError(httpStatusCodes['Bad Request'], error.message), req, res, next);
   }
 };
 
@@ -23,7 +23,7 @@ export const getUserController = async (req, res, next) => {
 
     return sendResponse(res, httpStatusCodes.OK, 'success', 'get user by id', user);
   } catch (error) {
-    next(error);
+    return errRes(new CustomError(httpStatusCodes['Bad Request'], error.message), req, res, next);
   }
 };
 
@@ -33,7 +33,7 @@ export const createUserController = async (req, res, next) => {
     const user = await createUser({ username, role, password });
     return sendResponse(res, httpStatusCodes.Created, 'success', 'user created', user);
   } catch (error) {
-    next(error);
+    return errRes(new CustomError(httpStatusCodes['Bad Request'], error.message), req, res, next);
   }
 }
 
@@ -50,7 +50,7 @@ export const updateUserController = async (req, res, next) => {
     if (!user) return errRes({ status: httpStatusCodes['Not Found'], message: 'user with given id does not exists' }, req, res, next);
     return sendResponse(res, httpStatusCodes.OK, 'success', 'user data updated', null);
   } catch (error) {
-    next(error);
+    return errRes(new CustomError(httpStatusCodes['Bad Request'], error.message), req, res, next);
   }
 }
 
@@ -62,7 +62,7 @@ export const deleteUserController = async (req, res, next) => {
     if (!user) return errRes({ status: httpStatusCodes['Not Found'], message: 'user with given id does not exists' }, req, res, next);
     return sendResponse(res, httpStatusCodes.OK, 'success', 'user deleted', null);
   } catch (error) {
-    next(error);
+    return errRes(new CustomError(httpStatusCodes['Bad Request'], error.message), req, res, next);
   }
 }
 
@@ -83,6 +83,6 @@ export const loginUserController = async (req, res, next) => {
       status: httpStatusCodes.Unauthorized
     }, req, res, next);
   } catch (error) {
-    next(error);
+    return errRes(new CustomError(httpStatusCodes['Bad Request'], error.message), req, res, next);
   }
 }

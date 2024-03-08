@@ -1,4 +1,4 @@
-import { productModel } from "../models/product.model.js";
+import { Product } from "../models/product.model.js";
 
 
 export const getProducts = async (page) => new Promise(async (resolve, reject) => {

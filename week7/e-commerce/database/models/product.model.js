@@ -1,20 +1,23 @@
-import mongoose from 'mongoose';
+import sequelize from "../connect.js";
+import { DataTypes } from "sequelize";
 
-const productSchema = new mongoose.Schema({
+const Product = sequelize.define("Product", {
+  _id: {
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4,
+    allowNull: false,
+    primaryKey: true,
+  },
   name: {
-    type: String,
-    required: [true, 'product must have a name'],
-    maxLength: [50, 'product name cannot be more than 50 characters']
+    type: DataTypes.STRING,
+    allowNull: false,
   },
   price: {
-    type: Number,
-    required: [true, 'product must have a price'],
-  },
-  seller: {
-    type: mongoose.Schema.Types.ObjectId,
-    required: [true, 'product must have a seller id'],
-    ref: 'User'
+    type: DataTypes.INTEGER,
+    allowNull: false,
   }
-}, { timestamps: true });
+}, {
+  timestamps: false
+})
 
-export const productModel = mongoose.model('Product', productSchema);
+export { Product };

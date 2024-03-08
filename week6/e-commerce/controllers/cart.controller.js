@@ -13,7 +13,7 @@ export const getCartItemsController = async (req, res, next) => {
 
     return sendResponse(res, httpStatusCodes.OK, 'success', 'get cart items', cartItems);
   } catch (error) {
-    next(error);
+    return errRes(new CustomError(httpStatusCodes['Bad Request'], error.message), req, res, next);
   }
 }
 
@@ -38,7 +38,7 @@ export const createCartItemController = async (req, res, next) => {
 
     return sendResponse(res, httpStatusCodes.Created, 'success', 'create cart item', cartItem);
   } catch (error) {
-    next(error);
+    return errRes(new CustomError(httpStatusCodes['Bad Request'], error.message), req, res, next);
   }
 }
 
@@ -59,7 +59,7 @@ export const deleteCartItemController = async (req, res, next) => {
     await deleteCartItem(cartItemId);
     return sendResponse(res, httpStatusCodes.OK, 'success', 'delete cart item', null);
   } catch (error) {
-    next(error);
+    return errRes(new CustomError(httpStatusCodes['Bad Request'], error.message), req, res, next);
   }
 }
 
@@ -75,7 +75,7 @@ export const placeOrderController = async (req, res, next) => {
 
     return sendResponse(res, httpStatusCodes.OK, 'success', 'place order', orderData);
   } catch (error) {
-    next(error);
+    return errRes(new CustomError(httpStatusCodes['Bad Request'], error.message), req, res, next);
   }
 }
 
@@ -93,6 +93,6 @@ export const getOrderHistoryController = async (req, res, next) => {
 
     return sendResponse(res, httpStatusCodes.OK, 'success', 'get order history', orders);
   } catch (error) {
-    next(error);
+    return errRes(new CustomError(httpStatusCodes['Bad Request'], error.message), req, res, next);
   }
 }
