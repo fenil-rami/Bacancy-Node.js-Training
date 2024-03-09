@@ -1,11 +1,11 @@
-import { cartModel } from "../models/cart.model.js";
-import { orderModel } from "../models/order.model.js";
-import mongoose from 'mongoose';
-const db = mongoose.connection;
+import sequelize from "../connect.js";
+import { Cart } from "../models/cart.model.js";
+import { getProduct } from "./product.js";
+import { getUser } from "./user.js";
 
 export const getCartItem = async (cartId) => new Promise(async (resolve, reject) => {
   try {
-    const cartItem = await cartModel.findById(cartId).lean();
+    const cartItem = await Cart.findByPk(cartId);
     resolve(cartItem);
   } catch (error) {
     reject(error);
@@ -14,7 +14,11 @@ export const getCartItem = async (cartId) => new Promise(async (resolve, reject)
 
 export const getAllCartItems = async (buyerId) => new Promise(async (resolve, reject) => {
   try {
-    const cartItems = await cartModel.find({ buyer: buyerId }).lean();
+    const cartItems = await Cart.findAll({
+      where: {
+        user_id: buyerId
+      }
+    });
     resolve(cartItems);
   } catch (error) {
     reject(error);
@@ -22,10 +26,41 @@ export const getAllCartItems = async (buyerId) => new Promise(async (resolve, re
 })
 
 export const createCartItem = async (cartData) => new Promise(async (resolve, reject) => {
+  const t = await sequelize.transaction();
   try {
-    const cartItem = await cartModel.create(cartData);
-    resolve(cartItem);
+    const { user_id, product_id } = cartData;
+    const user = await getUser(user_id);
+    const product = await getProduct(product_id);
+
+    if (!user) {
+      await t.rollback();
+      reject({
+        message: 'User with given id does not exists'
+      });
+      return;
+    }
+
+    if (!product) {
+      await t.rollback();
+      reject({
+        message: 'Product with given id does not exists'
+      });
+      return;
+    }
+
+    const new_cartItem = await Cart.create({
+      user_id,
+      product_id
+    }, {
+      transaction: t
+    })
+
+    await new_cartItem.setUser(user, { transaction: t })
+    await new_cartItem.setProduct(product, { transaction: t })
+    await t.commit();
+    resolve(new_cartItem);
   } catch (error) {
+    await t.rollback();
     reject(error);
   }
 })

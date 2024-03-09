@@ -2,6 +2,7 @@ import { getCartItem, getAllCartItems, createCartItem, deleteCartItem, placeOrde
 import { httpStatusCodes } from '../constants/constants.js';
 import { errRes, sendResponse } from '../helpers/sendReponse.js';
 import { getProduct } from "../database/database_functions/product.js";
+import { CustomError } from "../constants/constants.js";
 
 export const getCartItemsController = async (req, res, next) => {
   const { id } = req.params;
@@ -13,32 +14,22 @@ export const getCartItemsController = async (req, res, next) => {
 
     return sendResponse(res, httpStatusCodes.OK, 'success', 'get cart items', cartItems);
   } catch (error) {
-    next(error);
+    return errRes(new CustomError(httpStatusCodes['Bad Request'], error.message), req, res, next);
   }
 }
 
 export const createCartItemController = async (req, res, next) => {
-  const { id } = req.params;
   const { product_id } = req.body;
+  const { _id } = req.body.decoded;
 
   try {
-    const product_data = await getProduct(product_id);
-
-    if (!product_data) return errRes({
-      message: 'product with given id does not exists',
-      status: httpStatusCodes["Not Found"]
-    }, req, res, next);
-
     const cartItem = await createCartItem({
-      product_id: product_data._id.toString(),
-      product_name: product_data.name,
-      product_price: product_data.price,
-      buyer: id
-    });
-
+      product_id: product_id,
+      user_id: _id
+    })
     return sendResponse(res, httpStatusCodes.Created, 'success', 'create cart item', cartItem);
   } catch (error) {
-    next(error);
+    return errRes(new CustomError(httpStatusCodes['Bad Request'], error.message), req, res, next);
   }
 }
 
@@ -59,7 +50,7 @@ export const deleteCartItemController = async (req, res, next) => {
     await deleteCartItem(cartItemId);
     return sendResponse(res, httpStatusCodes.OK, 'success', 'delete cart item', null);
   } catch (error) {
-    next(error);
+    return errRes(new CustomError(httpStatusCodes['Bad Request'], error.message), req, res, next);
   }
 }
 
@@ -75,7 +66,7 @@ export const placeOrderController = async (req, res, next) => {
 
     return sendResponse(res, httpStatusCodes.OK, 'success', 'place order', orderData);
   } catch (error) {
-    next(error);
+    return errRes(new CustomError(httpStatusCodes['Bad Request'], error.message), req, res, next);
   }
 }
 
@@ -84,7 +75,7 @@ export const getOrderHistoryController = async (req, res, next) => {
   try {
     const orders = await getOrderHistory(id);
 
-    if(!orders) {
+    if (!orders) {
       return errRes({
         message: "bad request",
         status: httpStatusCodes["Bad Request"]
@@ -93,6 +84,6 @@ export const getOrderHistoryController = async (req, res, next) => {
 
     return sendResponse(res, httpStatusCodes.OK, 'success', 'get order history', orders);
   } catch (error) {
-    next(error);
+    return errRes(new CustomError(httpStatusCodes['Bad Request'], error.message), req, res, next);
   }
 }

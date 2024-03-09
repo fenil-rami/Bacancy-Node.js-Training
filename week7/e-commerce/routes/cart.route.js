@@ -5,7 +5,7 @@ import { buyercartVerification } from '../middlewares/token_verification.js';
 const cartRouter = express.Router();
 
 cartRouter.get('/:id', buyercartVerification, getCartItemsController);
-cartRouter.post('/:id', buyercartVerification, createCartItemController);
+cartRouter.post('/', buyercartVerification, createCartItemController);
 cartRouter.delete('/:id', buyercartVerification, deleteCartItemController);
 cartRouter.post('/orders/:id', buyercartVerification, placeOrderController);
 cartRouter.get('/orders/:id', buyercartVerification, getOrderHistoryController);

@@ -47,7 +47,7 @@ export const buyercartVerification = async (req, res, next) => {
     try {
       const data = await jwt.verify(token, process.env.JWT_SECRET);
 
-      if(data.role === 'buyer' && req.params.id === data._id) {
+      if(data.role === 'buyer') {
         req.body.decoded = data;
         next();
         return;

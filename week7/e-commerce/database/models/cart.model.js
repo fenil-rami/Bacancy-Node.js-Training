@@ -1,22 +1,15 @@
-import mongoose from 'mongoose';
+import sequelize from "../connect.js";
+import { DataTypes } from "sequelize";
 
-const cartSchema = new mongoose.Schema({
-  product_id: {
-    type: String,
-    required:[true, 'cart must have a product id'],
+const Cart = sequelize.define("Cart", {
+  _id: {
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4,
+    allowNull: false,
+    primaryKey: true,
   },
-  product_name: {
-    type: String,
-    required:[true, 'cart must have a product name']
-  },
-  product_price: {
-    type: Number,
-    required:[true, 'cart must have a product price']
-  },
-  buyer: {
-    type: String,
-    required: [true, 'cart must have a buyer id'],
-  }
-}, { timestamps: true });
+}, {
+  timestamps: false
+})
 
-export const cartModel = mongoose.model('Cart', cartSchema); 
+export { Cart };
