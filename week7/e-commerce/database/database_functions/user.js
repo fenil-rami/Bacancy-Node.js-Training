@@ -24,6 +24,8 @@ export const getUser = async (userId) => new Promise(async (resolve, reject) => 
         exclude: ['password']
       }
     });
+
+    console.log('user in db function', user)
     resolve(user);
   } catch (error) {
     reject(error);

@@ -1,5 +1,6 @@
 import { User } from "./models/user.model.js";
 import { Product } from "./models/product.model.js";
+import sequelize from "./connect.js";
 
 const syncTables = async () => {
 

@@ -1,5 +1,5 @@
 import { getProducts, createProduct, getProduct, updateProduct, deleteProduct } from "../database/database_functions/product.js";
-import { httpStatusCodes } from '../constants/constants.js';
+import { CustomError, httpStatusCodes } from '../constants/constants.js';
 import { errRes, sendResponse } from '../helpers/sendReponse.js';
 
 export const getProductsController = async (req, res, next) => {
@@ -10,7 +10,7 @@ export const getProductsController = async (req, res, next) => {
     console.log(products.length);
     return sendResponse(res, httpStatusCodes.OK, 'success', 'get all products', products);
   } catch (error) {
-    next(error);
+    return errRes(new CustomError(httpStatusCodes["Bad Request"], error.message), req, res, next);
   }
 }
 
@@ -24,25 +24,19 @@ export const getProductController = async (req, res, next) => {
     }, req, res, next)
     return sendResponse(res, httpStatusCodes.OK, 'success', 'get product from id', product);
   } catch (error) {
-    next(error);
+    return errRes(new CustomError(httpStatusCodes["Bad Request"], error.message), req, res, next);
   }
 }
 
 export const createProductController = async (req, res, next) => {
-  const { name, price, seller } = req.body;
-
-  if (!seller || seller !== req.body.decoded._id) {
-    return errRes({
-      message: "Forbidden",
-      status: httpStatusCodes.Forbidden
-    }, req, res, next);
-  }
+  const { name, price } = req.body;
+  const { _id } = req.body.decoded;
 
   try {
-    const product = await createProduct({ name, price, seller });
+    const product = await createProduct({ name, price, user_id:_id });
     return sendResponse(res, httpStatusCodes.Created, 'success', 'product created', product);
   } catch (error) {
-    next(error);
+    return errRes(new CustomError(httpStatusCodes["Bad Request"], error.message), req, res, next);
   }
 }
 
@@ -72,7 +66,7 @@ export const updateProductController = async (req, res, next) => {
     await updateProduct(id, dataToUpdate);
     return sendResponse(res, httpStatusCodes.OK, 'success', 'update product', null);
   } catch (error) {
-    next(error);
+    return errRes(new CustomError(httpStatusCodes["Bad Request"], error.message), req, res, next);
   }
 }
 
@@ -98,6 +92,6 @@ export const deleteProductContoller = async (req, res, next) => {
     await deleteProduct(id);
     return sendResponse(res, httpStatusCodes.OK, 'success', 'delete product', null);
   } catch (error) {
-    next(error);
+    return errRes(new CustomError(httpStatusCodes["Bad Request"], error.message), req, res, next);
   }
 }

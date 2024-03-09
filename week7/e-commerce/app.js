@@ -6,12 +6,15 @@ import { CustomError, httpStatusCodes } from './constants/constants.js';
 import { errRes } from './helpers/sendReponse.js';
 // import { connectDB } from './database/connect.js';
 import { router } from './routes/index.route.js';
+import { syncTables } from './database/relations.js';
 
 const app = express();
 const PORT = process.env.PORT || 3030;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+await syncTables();
 
 app.use('/api/v1', router);
 

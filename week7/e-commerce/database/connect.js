@@ -9,7 +9,7 @@ const sequelize = new Sequelize('ecommerce', 'postgres', 'root', {
 
 const connect = async () => {
     try {
-        // await sequelize.sync()
+        // await sequelize.sync({ force: true })
         await sequelize.authenticate(); // testing connection
         console.log("Database Connected successfully!!!")
     }
