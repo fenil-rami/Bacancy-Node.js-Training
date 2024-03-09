@@ -28,7 +28,7 @@ export const getProducts = async (page) => new Promise(async (resolve, reject) =
 
 export const getProduct = async (productId) => new Promise(async (resolve, reject) => {
   try {
-    const product = await productModel.findById(productId).lean().populate('seller', '-password').lean();
+    const product = await Product.findByPk(productId);
     resolve(product);
   } catch (error) {
     reject(error);
@@ -60,7 +60,11 @@ export const createProduct = async (productData) => new Promise(async (resolve, 
 
 export const updateProduct = async (productId, productData) => new Promise(async (resolve, reject) => {
   try {
-    await productModel.findByIdAndUpdate(productId, productData).lean().populate('seller', '-password').lean();
+    await Product.update(productData, {
+      where: {
+        _id: productId
+      }
+    })
     resolve();
   } catch (error) {
     reject(error);
@@ -69,7 +73,11 @@ export const updateProduct = async (productId, productData) => new Promise(async
 
 export const deleteProduct = async (productId) => new Promise(async (resolve, reject) => {
   try {
-    await productModel.findByIdAndDelete(productId).lean();
+    await Product.destroy({
+      where: {
+        _id: productId
+      }
+    })
     resolve();
   } catch (error) {
     reject(error);

@@ -10,7 +10,6 @@ export const getUsers = async () => new Promise(async (resolve, reject) => {
         exclude: ['password']
       }
     })
-    console.log(users);
     resolve(users);
   } catch (error) {
     reject(error);
@@ -25,7 +24,6 @@ export const getUser = async (userId) => new Promise(async (resolve, reject) => 
       }
     });
 
-    console.log('user in db function', user)
     resolve(user);
   } catch (error) {
     reject(error);

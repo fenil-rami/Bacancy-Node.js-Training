@@ -33,7 +33,7 @@ export const createProductController = async (req, res, next) => {
   const { _id } = req.body.decoded;
 
   try {
-    const product = await createProduct({ name, price, user_id:_id });
+    const product = await createProduct({ name, price, user_id: _id });
     return sendResponse(res, httpStatusCodes.Created, 'success', 'product created', product);
   } catch (error) {
     return errRes(new CustomError(httpStatusCodes["Bad Request"], error.message), req, res, next);
@@ -56,7 +56,7 @@ export const updateProductController = async (req, res, next) => {
     }, req, res, next);
 
     // If the user(seller) tries to update a product which is not created/owned by them 
-    if (req.body.decoded._id !== product.seller._id.toString()) {
+    if (req.body.decoded._id !== product.user_id) {
       return errRes({
         message: "Forbidden",
         status: httpStatusCodes.Forbidden
@@ -82,7 +82,7 @@ export const deleteProductContoller = async (req, res, next) => {
     }, req, res, next);
 
     // If the user(seller) tries to delete a product which is not created/owned by them 
-    if (req.body.decoded._id !== product.seller._id.toString()) {
+    if (req.body.decoded._id !== product.user_id.toString()) {
       return errRes({
         message: "Forbidden",
         status: httpStatusCodes.Forbidden
