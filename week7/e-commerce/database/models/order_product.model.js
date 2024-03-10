@@ -1,7 +1,7 @@
 import sequelize from "../connect.js";
 import { DataTypes } from "sequelize";
 
-const Order = sequelize.define("Order", {
+const Order_Product = sequelize.define("Order_Product", {
   _id: {
     type: DataTypes.UUID,
     defaultValue: DataTypes.UUIDV4,
@@ -12,4 +12,4 @@ const Order = sequelize.define("Order", {
   timestamps: false
 })
 
-export { Order };
+export { Order_Product };

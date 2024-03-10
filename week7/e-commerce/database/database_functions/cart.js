@@ -2,6 +2,8 @@ import sequelize from "../connect.js";
 import { Cart } from "../models/cart.model.js";
 import { getProduct } from "./product.js";
 import { getUser } from "./user.js";
+import { Order } from "../models/order.model.js";
+import { Order_Product } from "../models/order_product.model.js";
 
 export const getCartItem = async (cartId) => new Promise(async (resolve, reject) => {
   try {
@@ -79,48 +81,59 @@ export const deleteCartItem = async (cartId) => new Promise(async (resolve, reje
 })
 
 export const placeOrder = async (buyerId) => new Promise(async (resolve, reject) => {
-  const session = await db.startSession();
-
-  // start of the transaction
-  session.startTransaction();
+  const t = await sequelize.transaction();
 
   try {
-    // generate order summary
-    const cartItems = await cartModel.aggregate([
-      {
-        $match: { buyer: buyerId }
-      },
-      {
-        $group: {
-          _id: crypto.randomUUID(),
-          cartItems: { $push: '$$ROOT' },
-          totalAmount: { $sum: '$product_price' }
-        }
-      }
-    ])
+    // get all cart items 
+    const cartItems = await getAllCartItems(buyerId);
 
     // No items in cart, so cant place order
     if (!cartItems || cartItems === undefined || cartItems.length === 0) {
-      await session.abortTransaction();
-      session.endSession();
-      resolve(null);
+      await t.rollback();
+      reject({
+        message: 'No items in cart to make order'
+      })
       return;
     }
 
     // delete items from cart
-    await cartModel.deleteMany({ buyer: buyerId }).lean();
+    await Cart.destroy({
+      where: {
+        user_id: buyerId
+      }
+    }, { transaction: t })
 
-    // save order history 
-    const orderSummary = await orderModel.create({ data: cartItems, buyer: buyerId });
+    // save order history
+    const order = await Order.create({
+      user_id: buyerId,
+    }, {
+      transaction: t
+    })
+
+    let orderProducts = [];
+
+    // save all the products in order
+    for (let i = 0; i < cartItems.length; i++) {
+      const orderProduct = await Order_Product.create({
+        order_id: order._id,
+        product_id: cartItems[i].product_id
+      }, {
+        transaction: t
+      })
+
+      orderProducts.push(orderProduct.product_id);
+    }
 
     // commit transaction
-    await session.commitTransaction();
+    await t.commit();
 
-    // end of the transaction
-    session.endSession();
-
-    resolve(orderSummary);
+    resolve({
+      order: order,
+      products: orderProducts
+    });
   } catch (error) {
+    await t.rollback();
+    console.log('Error ', error);
     reject(error);
   }
 })

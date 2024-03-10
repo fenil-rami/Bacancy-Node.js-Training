@@ -65,9 +65,19 @@ export const deleteCartItemController = async (req, res, next) => {
 
 export const placeOrderController = async (req, res, next) => {
   const { id } = req.params;
+  const { _id } = req.body.decoded;
 
   try {
-    const orderData = await placeOrder(id);
+
+    if (_id !== id) {
+      return errRes({
+
+        message: 'Forbidden',
+        status: httpStatusCodes['Forbidden']
+      }, req, res, next);
+    }
+
+    const orderData = await placeOrder(_id);
 
     if (!orderData) {
       return errRes({ message: 'invalid order', status: httpStatusCodes["Bad Request"] }, req, res, next);
