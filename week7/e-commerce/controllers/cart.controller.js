@@ -71,7 +71,6 @@ export const placeOrderController = async (req, res, next) => {
 
     if (_id !== id) {
       return errRes({
-
         message: 'Forbidden',
         status: httpStatusCodes['Forbidden']
       }, req, res, next);
@@ -91,7 +90,17 @@ export const placeOrderController = async (req, res, next) => {
 
 export const getOrderHistoryController = async (req, res, next) => {
   const { id } = req.params;
+  const {_id} = req.body.decoded;
+
   try {
+
+    if (_id !== id) {
+      return errRes({
+        message: 'Forbidden',
+        status: httpStatusCodes['Forbidden']
+      }, req, res, next);
+    }
+    
     const orders = await getOrderHistory(id);
 
     if (!orders) {
