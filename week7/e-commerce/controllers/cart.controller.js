@@ -6,8 +6,17 @@ import { CustomError } from "../constants/constants.js";
 
 export const getCartItemsController = async (req, res, next) => {
   const { id } = req.params;
+  const { _id } = req.body.decoded;
 
   try {
+
+    if (_id !== id) {
+      return errRes({
+        message: 'Forbidden',
+        status: httpStatusCodes['Forbidden']
+      }, req, res, next);
+    }
+
     const cartItems = await getAllCartItems(id);
 
     if (!cartItems) return errRes({ message: "Cart item with given buyer id does not exists", status: httpStatusCodes["Not Found"] }, req, res, next);
@@ -34,20 +43,20 @@ export const createCartItemController = async (req, res, next) => {
 }
 
 export const deleteCartItemController = async (req, res, next) => {
-  const { id } = req.params;
-  const { cartItemId } = req.body;
+  const { cartId } = req.params;
+  const { _id } = req.body.decoded;
 
   try {
-    const cartItem = await getCartItem(cartItemId);
+    const cartItem = await getCartItem(cartId);
 
     if (!cartItem) return errRes({ message: 'cart item with given id does not exists', status: httpStatusCodes["Not Found"] }, req, res, next);
 
     // If user tries to delete cart item of another user
-    if (cartItem.buyer !== id) {
+    if (cartItem.user_id !== _id) {
       return errRes({ message: 'Forbidden', status: httpStatusCodes.Forbidden }, req, res, next);
     }
 
-    await deleteCartItem(cartItemId);
+    await deleteCartItem(cartId);
     return sendResponse(res, httpStatusCodes.OK, 'success', 'delete cart item', null);
   } catch (error) {
     return errRes(new CustomError(httpStatusCodes['Bad Request'], error.message), req, res, next);

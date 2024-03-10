@@ -44,7 +44,9 @@ export const createProduct = async (productData) => new Promise(async (resolve, 
 
     if (!user) {
       await t.rollback();
-      reject('User with given id does not exists');
+      reject({
+        message: 'User with given id does not exists'
+      });
       return;
     }
 

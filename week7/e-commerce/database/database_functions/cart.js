@@ -67,8 +67,12 @@ export const createCartItem = async (cartData) => new Promise(async (resolve, re
 
 export const deleteCartItem = async (cartId) => new Promise(async (resolve, reject) => {
   try {
-    const cartItem = await cartModel.findByIdAndDelete(cartId).lean();
-    resolve(cartItem);
+    await Cart.destroy({
+      where: {
+        _id: cartId
+      }
+    })
+    resolve();
   } catch (error) {
     reject(error);
   }
