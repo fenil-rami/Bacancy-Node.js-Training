@@ -163,9 +163,7 @@ export const getOrderHistory = async (buyerId) => new Promise(async (resolve, re
 
     if (!user_orders || user_orders === undefined || user_orders.length === 0) {
       await t.rollback();
-      reject({
-        message: 'No orders to show',
-      })
+      resolve([]);
       return;
     }
 
