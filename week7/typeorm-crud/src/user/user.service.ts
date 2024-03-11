@@ -57,4 +57,17 @@ export class UserService {
       throw new BadRequestException(error.message);
     }
   }
+
+  async findByUsername(username: string) {
+    try {
+      const user = await this.userRepository
+        .createQueryBuilder('user')
+        .addSelect('user.password')
+        .where('user.username = :username', { username })
+        .getOne();
+      return user;
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+  }
 }
